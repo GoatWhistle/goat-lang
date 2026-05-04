@@ -1,0 +1,423 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Примеры — Goat Language</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="topnav">
+  <div class="topnav-inner">
+    <a class="brand" href="index.html">
+      <span class="brand-mark">G</span>
+      Goat Language
+    </a>
+    <div class="topnav-links">
+      <a href="index.html">Главная</a>
+      <a href="syntax.html">Синтаксис</a>
+      <a href="stdlib.html">Стандартная библиотека</a>
+      <a href="examples.html" class="active">Примеры</a>
+      <a href="architecture.html">Архитектура</a>
+    </div>
+  </div>
+</div>
+
+<main>
+  <div class="page-wrap with-sidebar">
+
+    <aside class="sidebar">
+      <nav>
+        <span class="sidebar-section">Примеры</span>
+        <a href="#factorial">Факториал</a>
+        <a href="#fibonacci">Числа Фибоначчи</a>
+        <a href="#list-ops">Операции со списками</a>
+        <a href="#quicksort">Сортировки</a>
+        <a href="#lazy-streams">Ленивые потоки</a>
+        <a href="#option-monad">Option-монада</a>
+        <a href="#shapes">Алгебраические типы</a>
+        <a href="#file-io">Работа с файлами</a>
+      </nav>
+    </aside>
+
+    <div class="content">
+      <h1>Примеры программ</h1>
+      <p class="lead">
+        Полные программы из каталога <code>examples/</code> с подробными объяснениями.
+        Каждый пример демонстрирует отдельную группу возможностей языка.
+      </p>
+
+      <!-- ── Factorial ── -->
+      <h2 id="factorial">Факториал — рекурсия и IO</h2>
+      <p>
+        Классический пример рекурсивной функции. Демонстрирует
+        <code>fun rec</code>, условие <code>if/then/else</code> и IO-блок.
+      </p>
+
+      <div class="terminal-wrap">
+        <div class="terminal-bar">
+          <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+          <span class="label">factorial.goat</span>
+        </div>
+<pre><code><span class="kw">fun rec</span> <span class="fn">factorial</span> n <span class="op">=</span>
+  <span class="kw">if</span> n <span class="op">&lt;=</span> <span class="num">1</span> <span class="kw">then</span> <span class="num">1</span>
+  <span class="kw">else</span> n <span class="op">*</span> <span class="fn">factorial</span> (n <span class="op">-</span> <span class="num">1</span>)
+
+<span class="kw">fun</span> <span class="fn">main</span> _ <span class="op">=</span>
+  <span class="kw">io</span> {
+    <span class="kw">do!</span> <span class="fn">println</span> (<span class="fn">show</span> (<span class="fn">factorial</span> <span class="num">0</span>))
+    <span class="kw">do!</span> <span class="fn">println</span> (<span class="fn">show</span> (<span class="fn">factorial</span> <span class="num">1</span>))
+    <span class="kw">do!</span> <span class="fn">println</span> (<span class="fn">show</span> (<span class="fn">factorial</span> <span class="num">5</span>))
+    <span class="kw">do!</span> <span class="fn">println</span> (<span class="fn">show</span> (<span class="fn">factorial</span> <span class="num">10</span>))
+  }</code></pre>
+      </div>
+
+      <h3>Что здесь происходит</h3>
+      <ul>
+        <li><code>fun rec</code> — объявляет рекурсивную функцию. Без <code>rec</code> имя функции недоступно внутри тела.</li>
+        <li>Базовый случай — <code>n &lt;= 1</code> возвращает <code>1</code>.</li>
+        <li>Рекурсивный случай — <code>n * factorial (n - 1)</code>. Скобки важны: без них <code>n - 1</code> был бы отдельным применением.</li>
+        <li><code>show</code> конвертирует Int в String для вывода.</li>
+        <li><code>do!</code> выполняет IO-действие в монадическом блоке.</li>
+      </ul>
+
+      <h3>Вывод</h3>
+      <pre><code>1
+1
+120
+3628800</code></pre>
+
+      <!-- ── Fibonacci ── -->
+      <h2 id="fibonacci">Числа Фибоначчи — три подхода</h2>
+      <p>
+        Демонстрирует наивную рекурсию, хвостово-рекурсивную оптимизацию
+        и бесконечный ленивый поток.
+      </p>
+
+      <div class="terminal-wrap">
+        <div class="terminal-bar">
+          <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+          <span class="label">fibonacci.goat</span>
+        </div>
+<pre><code><span class="cmt">-- Наивная рекурсия: O(2^n)</span>
+<span class="kw">fun rec</span> <span class="fn">fib</span> n <span class="op">=</span>
+  <span class="kw">match</span> n <span class="kw">with</span>
+  <span class="op">|</span> <span class="num">0</span> <span class="op">=></span> <span class="num">0</span>
+  <span class="op">|</span> <span class="num">1</span> <span class="op">=></span> <span class="num">1</span>
+  <span class="op">|</span> n <span class="op">=></span> <span class="fn">fib</span> (n <span class="op">-</span> <span class="num">1</span>) <span class="op">+</span> <span class="fn">fib</span> (n <span class="op">-</span> <span class="num">2</span>)
+
+<span class="cmt">-- Хвостовая рекурсия: O(n)</span>
+<span class="kw">fun rec</span> <span class="fn">fibFast</span> a b n <span class="op">=</span>
+  <span class="kw">if</span> n <span class="op">==</span> <span class="num">0</span> <span class="kw">then</span> a
+  <span class="kw">else</span> <span class="fn">fibFast</span> b (a <span class="op">+</span> b) (n <span class="op">-</span> <span class="num">1</span>)
+
+<span class="kw">fun</span> <span class="fn">main</span> _ <span class="op">=</span>
+  <span class="kw">io</span> {
+    <span class="kw">do!</span> <span class="fn">println</span> <span class="str">"Naive fibonacci:"</span>
+    <span class="kw">do!</span> <span class="fn">println</span> (<span class="fn">show</span> (<span class="fn">map</span> fib [<span class="num">0</span>..<span class="num">9</span>]))
+    <span class="kw">do!</span> <span class="fn">println</span> <span class="str">"Fast fibonacci:"</span>
+    <span class="kw">do!</span> <span class="fn">println</span> (<span class="fn">show</span> (<span class="fn">map</span> (<span class="fn">fibFast</span> <span class="num">0</span> <span class="num">1</span>) [<span class="num">0</span>..<span class="num">9</span>]))
+  }</code></pre>
+      </div>
+
+      <h3>Бесконечный поток (из lazy_streams)</h3>
+      <pre><code><span class="kw">fun rec</span> <span class="fn">fibs</span> a b <span class="op">=</span> a <span class="op">::</span> <span class="kw">lazy</span> (<span class="fn">fibs</span> b (a <span class="op">+</span> b))
+
+<span class="kw">let</span> fibStream <span class="op">=</span> <span class="fn">fibs</span> <span class="num">0</span> <span class="num">1</span>
+
+<span class="fn">take</span> <span class="num">10</span> fibStream  <span class="cmt">-- [0, 1, 1, 2, 3, 5, 8, 13, 21, 34]</span></code></pre>
+
+      <p>
+        <code>a :: lazy (fibs b (a + b))</code> — голова списка вычисляется сразу,
+        хвост откладывается до вызова <code>force</code> (что делает <code>take</code> внутри).
+      </p>
+
+      <!-- ── List ops ── -->
+      <h2 id="list-ops">Операции со списками</h2>
+      <p>Демонстрирует базовые операции: сортировку, свёртку, отображение, фильтрацию и zip.</p>
+
+      <div class="terminal-wrap">
+        <div class="terminal-bar">
+          <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+          <span class="label">list_ops.goat</span>
+        </div>
+<pre><code><span class="kw">fun rec</span> <span class="fn">quicksort</span> xs <span class="op">=</span>
+  <span class="kw">match</span> xs <span class="kw">with</span>
+  <span class="op">|</span> []       <span class="op">=></span> []
+  <span class="op">|</span> p <span class="op">::</span> rest <span class="op">=></span>
+      <span class="kw">let</span> smaller <span class="op">=</span> <span class="fn">filter</span> (\x <span class="op">-></span> x <span class="op">&lt;</span> p) rest <span class="kw">in</span>
+      <span class="kw">let</span> greater <span class="op">=</span> <span class="fn">filter</span> (\x <span class="op">-></span> x <span class="op">&gt;=</span> p) rest <span class="kw">in</span>
+      <span class="fn">append</span> (<span class="fn">quicksort</span> smaller) (p <span class="op">::</span> <span class="fn">quicksort</span> greater)
+
+<span class="kw">fun</span> <span class="fn">sumList</span> xs <span class="op">=</span> <span class="fn">fold</span> (\acc x <span class="op">-></span> acc <span class="op">+</span> x) <span class="num">0</span> xs
+
+<span class="kw">fun</span> <span class="fn">main</span> _ <span class="op">=</span>
+  <span class="kw">io</span> {
+    <span class="kw">let</span> nums <span class="op">=</span> [<span class="num">5</span>, <span class="num">3</span>, <span class="num">8</span>, <span class="num">1</span>, <span class="num">9</span>, <span class="num">2</span>, <span class="num">7</span>, <span class="num">4</span>, <span class="num">6</span>]
+    <span class="kw">do!</span> <span class="fn">println</span> (<span class="fn">show</span> (<span class="fn">quicksort</span> nums))
+    <span class="kw">do!</span> <span class="fn">println</span> (<span class="fn">show</span> (<span class="fn">sumList</span> [<span class="num">1</span>..<span class="num">10</span>]))
+    <span class="kw">do!</span> <span class="fn">println</span> (<span class="fn">show</span> (<span class="fn">map</span> (\x <span class="op">-></span> x <span class="op">*</span> x) [<span class="num">1</span>..<span class="num">5</span>]))
+    <span class="kw">do!</span> <span class="fn">println</span> (<span class="fn">show</span> (<span class="fn">filter</span> (\x <span class="op">-></span> x <span class="kw">mod</span> <span class="num">2</span> <span class="op">==</span> <span class="num">0</span>) [<span class="num">1</span>..<span class="num">10</span>]))
+    <span class="kw">do!</span> <span class="fn">println</span> (<span class="fn">show</span> (<span class="fn">zip</span> [<span class="num">1</span>..<span class="num">5</span>] [<span class="str">"a"</span>, <span class="str">"b"</span>, <span class="str">"c"</span>, <span class="str">"d"</span>, <span class="str">"e"</span>]))
+  }</code></pre>
+      </div>
+
+      <h3>Вывод</h3>
+      <pre><code>[1, 2, 3, 4, 5, 6, 7, 8, 9]
+55
+[1, 4, 9, 16, 25]
+[2, 4, 6, 8, 10]
+[(1, "a"), (2, "b"), (3, "c"), (4, "d"), (5, "e")]</code></pre>
+
+      <!-- ── Quicksort ── -->
+      <h2 id="quicksort">Сортировки — функции сравнения</h2>
+      <p>
+        Параметризованный quicksort: функция сравнения передаётся как аргумент,
+        что позволяет сортировать в любом порядке и по любому критерию.
+        Также mergesort для сравнения.
+      </p>
+
+      <div class="terminal-wrap">
+        <div class="terminal-bar">
+          <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+          <span class="label">quicksort.goat</span>
+        </div>
+<pre><code><span class="kw">fun rec</span> <span class="fn">quicksort</span> cmp xs <span class="op">=</span>
+  <span class="kw">match</span> xs <span class="kw">with</span>
+  <span class="op">|</span> []       <span class="op">=></span> []
+  <span class="op">|</span> p <span class="op">::</span> rest <span class="op">=></span>
+      <span class="kw">let</span> smaller <span class="op">=</span> <span class="fn">filter</span> (\x <span class="op">-></span> <span class="fn">cmp</span> x p) rest <span class="kw">in</span>
+      <span class="kw">let</span> greater <span class="op">=</span> <span class="fn">filter</span> (\x <span class="op">-></span> <span class="kw">not</span> (<span class="fn">cmp</span> x p) <span class="op">&amp;&amp;</span> x <span class="op">/=</span> p) rest <span class="kw">in</span>
+      <span class="kw">let</span> equal   <span class="op">=</span> <span class="fn">filter</span> (\x <span class="op">-></span> x <span class="op">==</span> p) rest <span class="kw">in</span>
+      <span class="fn">append</span> (<span class="fn">quicksort</span> cmp smaller)
+             (<span class="fn">append</span> (p <span class="op">::</span> equal) (<span class="fn">quicksort</span> cmp greater))
+
+<span class="kw">fun rec</span> <span class="fn">merge</span> xs ys <span class="op">=</span>
+  <span class="kw">match</span> (xs, ys) <span class="kw">with</span>
+  <span class="op">|</span> ([], ys)            <span class="op">=></span> ys
+  <span class="op">|</span> (xs, [])            <span class="op">=></span> xs
+  <span class="op">|</span> (x <span class="op">::</span> xt, y <span class="op">::</span> yt) <span class="op">=></span>
+      <span class="kw">if</span> x <span class="op">&lt;=</span> y <span class="kw">then</span> x <span class="op">::</span> <span class="fn">merge</span> xt ys
+      <span class="kw">else</span> y <span class="op">::</span> <span class="fn">merge</span> xs yt
+
+<span class="kw">fun</span> <span class="fn">main</span> _ <span class="op">=</span>
+  <span class="kw">io</span> {
+    <span class="kw">let</span> nums <span class="op">=</span> [<span class="num">64</span>, <span class="num">34</span>, <span class="num">25</span>, <span class="num">12</span>, <span class="num">22</span>, <span class="num">11</span>, <span class="num">90</span>]
+    <span class="kw">do!</span> <span class="fn">println</span> (<span class="fn">show</span> (<span class="fn">quicksort</span> (\a b <span class="op">-></span> a <span class="op">&lt;</span> b) nums))
+    <span class="kw">do!</span> <span class="fn">println</span> (<span class="fn">show</span> (<span class="fn">quicksort</span> (\a b <span class="op">-></span> a <span class="op">&gt;</span> b) nums))
+    <span class="kw">let</span> strs <span class="op">=</span> [<span class="str">"banana"</span>, <span class="str">"apple"</span>, <span class="str">"cherry"</span>]
+    <span class="kw">do!</span> <span class="fn">println</span> (<span class="fn">show</span> (<span class="fn">quicksort</span> (\a b <span class="op">-></span> a <span class="op">&lt;</span> b) strs))
+  }</code></pre>
+      </div>
+
+      <h3>Ключевые идеи</h3>
+      <ul>
+        <li>Функция <code>cmp</code> — произвольный компаратор, передаётся как аргумент (функция высшего порядка).</li>
+        <li>Одна реализация покрывает сортировку по возрастанию, убыванию и произвольному критерию.</li>
+        <li>Tuple-паттерн <code>(xs, ys)</code> в <code>merge</code> позволяет сопоставлять несколько значений одновременно.</li>
+      </ul>
+
+      <!-- ── Lazy streams ── -->
+      <h2 id="lazy-streams">Ленивые потоки — бесконечные последовательности</h2>
+      <p>
+        Демонстрирует явную ленивость: бесконечные потоки, решето Эратосфена
+        и степени двойки.
+      </p>
+
+      <div class="terminal-wrap">
+        <div class="terminal-bar">
+          <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+          <span class="label">lazy_streams.goat</span>
+        </div>
+<pre><code><span class="cmt">-- Решето Эратосфена</span>
+<span class="kw">fun rec</span> <span class="fn">sieve</span> xs <span class="op">=</span>
+  <span class="kw">match</span> xs <span class="kw">with</span>
+  <span class="op">|</span> []       <span class="op">=></span> []
+  <span class="op">|</span> p <span class="op">::</span> rest <span class="op">=></span>
+      p <span class="op">::</span> <span class="kw">lazy</span> (<span class="fn">sieve</span> (<span class="fn">lazyFilter</span> (\x <span class="op">-></span> x <span class="kw">mod</span> p <span class="op">/=</span> <span class="num">0</span>) (<span class="kw">force</span> rest)))
+
+<span class="kw">let</span> primes <span class="op">=</span> <span class="fn">sieve</span> (<span class="fn">natsFrom</span> <span class="num">2</span>)
+
+<span class="cmt">-- Числа Фибоначчи как поток</span>
+<span class="kw">fun rec</span> <span class="fn">fibs</span> a b <span class="op">=</span> a <span class="op">::</span> <span class="kw">lazy</span> (<span class="fn">fibs</span> b (a <span class="op">+</span> b))
+<span class="kw">let</span> fibStream <span class="op">=</span> <span class="fn">fibs</span> <span class="num">0</span> <span class="num">1</span>
+
+<span class="cmt">-- Степени числа</span>
+<span class="kw">fun rec</span> <span class="fn">powersOf</span> base n <span class="op">=</span> n <span class="op">::</span> <span class="kw">lazy</span> (<span class="fn">powersOf</span> base (n <span class="op">*</span> base))
+<span class="kw">let</span> twoPowers <span class="op">=</span> <span class="fn">powersOf</span> <span class="num">2</span> <span class="num">1</span>
+
+<span class="kw">fun</span> <span class="fn">main</span> _ <span class="op">=</span>
+  <span class="kw">io</span> {
+    <span class="kw">do!</span> <span class="fn">println</span> (<span class="fn">show</span> (<span class="fn">take</span> <span class="num">10</span> primes))
+    <span class="kw">do!</span> <span class="fn">println</span> (<span class="fn">show</span> (<span class="fn">take</span> <span class="num">10</span> fibStream))
+    <span class="kw">do!</span> <span class="fn">println</span> (<span class="fn">show</span> (<span class="fn">take</span> <span class="num">10</span> twoPowers))
+    <span class="kw">do!</span> <span class="fn">println</span> (<span class="fn">show</span> (<span class="fn">take</span> <span class="num">5</span> (<span class="fn">drop</span> <span class="num">100</span> nats)))
+  }</code></pre>
+      </div>
+
+      <h3>Разбор решета Эратосфена</h3>
+      <ul>
+        <li><code>natsFrom 2</code> — бесконечный поток 2, 3, 4, 5, …</li>
+        <li><code>sieve</code> берёт голову (простое число), форсирует хвост,
+            фильтрует кратные и рекурсивно просеивает — всё лениво.</li>
+        <li><code>force rest</code> явно форсирует ленивый хвост перед передачей в <code>lazyFilter</code>.</li>
+        <li><code>lazyFilter</code> снова создаёт ленивый хвост, поэтому решето работает по требованию.</li>
+      </ul>
+
+      <h3>Вывод</h3>
+      <pre><code>[2, 3, 5, 7, 11, 13, 17, 19, 23, 29]
+[0, 1, 1, 2, 3, 5, 8, 13, 21, 34]
+[1, 2, 4, 8, 16, 32, 64, 128, 256, 512]
+[100, 101, 102, 103, 104]</code></pre>
+
+      <!-- ── Option monad ── -->
+      <h2 id="option-monad">Option-монада — безопасные вычисления</h2>
+      <p>
+        Показывает, как использовать <code>Option</code> для безопасных вычислений
+        без исключений. Функции-цепочки через <code>bindOption</code>.
+      </p>
+
+      <div class="terminal-wrap">
+        <div class="terminal-bar">
+          <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+          <span class="label">option_monad.goat</span>
+        </div>
+<pre><code><span class="kw">fun</span> <span class="fn">safeDivide</span> x y <span class="op">=</span>
+  <span class="kw">if</span> y <span class="op">==</span> <span class="num">0</span> <span class="kw">then</span> <span class="tp">None</span>
+  <span class="kw">else</span> <span class="tp">Some</span> (x <span class="op">/</span> y)
+
+<span class="kw">fun</span> <span class="fn">safeHead</span> xs <span class="op">=</span>
+  <span class="kw">match</span> xs <span class="kw">with</span>
+  <span class="op">|</span> []      <span class="op">=></span> <span class="tp">None</span>
+  <span class="op">|</span> x <span class="op">::</span> _ <span class="op">=></span> <span class="tp">Some</span> x
+
+<span class="kw">fun</span> <span class="fn">safeSqrt</span> x <span class="op">=</span>
+  <span class="kw">if</span> x <span class="op">&lt;</span> <span class="num">0</span> <span class="kw">then</span> <span class="tp">None</span>
+  <span class="kw">else</span> <span class="tp">Some</span> (<span class="fn">sqrt</span> (<span class="fn">toFloat</span> x))
+
+<span class="cmt">-- Цепочка safe-операций через bindOption</span>
+<span class="kw">fun</span> <span class="fn">pipeline</span> x y <span class="op">=</span>
+  <span class="fn">bindOption</span> (<span class="fn">safeDivide</span> <span class="num">100</span> x) (\q <span class="op">-></span>
+  <span class="fn">bindOption</span> (<span class="fn">safeSqrt</span> q) (\r <span class="op">-></span>
+  <span class="fn">bindOption</span> (<span class="fn">safeDivide</span> (<span class="fn">toInt</span> r) y) (\result <span class="op">-></span>
+  <span class="tp">Some</span> result)))
+
+<span class="kw">fun</span> <span class="fn">main</span> _ <span class="op">=</span>
+  <span class="kw">io</span> {
+    <span class="kw">do!</span> <span class="fn">println</span> (<span class="fn">show</span> (<span class="fn">pipeline</span> <span class="num">4</span> <span class="num">2</span>))   <span class="cmt">-- Some 2</span>
+    <span class="kw">do!</span> <span class="fn">println</span> (<span class="fn">show</span> (<span class="fn">pipeline</span> <span class="num">0</span> <span class="num">2</span>))   <span class="cmt">-- None</span>
+  }</code></pre>
+      </div>
+
+      <h3>Как работает цепочка</h3>
+      <p>
+        <code>bindOption opt f</code> работает так: если <code>opt</code> равен <code>None</code> —
+        немедленно возвращает <code>None</code>, не вызывая <code>f</code>. Если <code>Some x</code> —
+        передаёт <code>x</code> в <code>f</code>. Это позволяет строить цепочки безопасных
+        вычислений: первый же <code>None</code> «замыкает» цепочку.
+      </p>
+
+      <!-- ── Shapes ── -->
+      <h2 id="shapes">Алгебраические типы данных — фигуры</h2>
+      <p>
+        Показывает объявление ADT, конструкторы с несколькими полями и
+        исчерпывающий pattern matching для вычисления площади и периметра.
+      </p>
+
+      <div class="terminal-wrap">
+        <div class="terminal-bar">
+          <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+          <span class="label">shapes.goat</span>
+        </div>
+<pre><code><span class="kw">type</span> <span class="tp">Shape</span> <span class="op">=</span>
+  <span class="op">|</span> <span class="tp">Circle</span>    <span class="kw">of</span> radius
+  <span class="op">|</span> <span class="tp">Rectangle</span> <span class="kw">of</span> width height
+  <span class="op">|</span> <span class="tp">Triangle</span>  <span class="kw">of</span> a b c
+
+<span class="kw">fun</span> <span class="fn">area</span> shape <span class="op">=</span>
+  <span class="kw">match</span> shape <span class="kw">with</span>
+  <span class="op">|</span> <span class="tp">Circle</span> r        <span class="op">=></span> pi <span class="op">*</span> r <span class="op">*</span> r
+  <span class="op">|</span> <span class="tp">Rectangle</span> w h   <span class="op">=></span> w <span class="op">*</span> h
+  <span class="op">|</span> <span class="tp">Triangle</span> a b c  <span class="op">=></span>
+      <span class="kw">let</span> s <span class="op">=</span> (a <span class="op">+</span> b <span class="op">+</span> c) <span class="op">/</span> <span class="num">2.0</span> <span class="kw">in</span>
+      <span class="fn">sqrt</span> (s <span class="op">*</span> (s <span class="op">-</span> a) <span class="op">*</span> (s <span class="op">-</span> b) <span class="op">*</span> (s <span class="op">-</span> c))
+
+<span class="kw">fun</span> <span class="fn">perimeter</span> shape <span class="op">=</span>
+  <span class="kw">match</span> shape <span class="kw">with</span>
+  <span class="op">|</span> <span class="tp">Circle</span> r        <span class="op">=></span> <span class="num">2.0</span> <span class="op">*</span> pi <span class="op">*</span> r
+  <span class="op">|</span> <span class="tp">Rectangle</span> w h   <span class="op">=></span> <span class="num">2.0</span> <span class="op">*</span> (w <span class="op">+</span> h)
+  <span class="op">|</span> <span class="tp">Triangle</span> a b c  <span class="op">=></span> a <span class="op">+</span> b <span class="op">+</span> c
+
+<span class="kw">fun</span> <span class="fn">main</span> _ <span class="op">=</span>
+  <span class="kw">io</span> {
+    <span class="kw">let</span> shapes <span class="op">=</span> [<span class="tp">Circle</span> <span class="num">5.0</span>, <span class="tp">Rectangle</span> <span class="num">4.0</span> <span class="num">6.0</span>, <span class="tp">Triangle</span> <span class="num">3.0</span> <span class="num">4.0</span> <span class="num">5.0</span>]
+    <span class="kw">do!</span> <span class="fn">println</span> (<span class="fn">unlines</span> (<span class="fn">map</span> describeShape shapes))
+    <span class="kw">let</span> largest <span class="op">=</span> <span class="fn">fold</span> (\acc s <span class="op">-></span> <span class="kw">if</span> <span class="fn">area</span> s <span class="op">&gt;</span> <span class="fn">area</span> acc <span class="kw">then</span> s <span class="kw">else</span> acc)
+                       (<span class="fn">head</span> shapes) (<span class="fn">tail</span> shapes)
+    <span class="kw">do!</span> <span class="fn">println</span> (<span class="str">"Largest: "</span> <span class="op">++</span> <span class="fn">showShape</span> largest)
+  }</code></pre>
+      </div>
+
+      <h3>Вывод</h3>
+      <pre><code>Circle(r=5.0) area=79 perim=31
+Rect(4.0x6.0) area=24 perim=20
+Triangle(3.0,4.0,5.0) area=6 perim=12
+
+Largest: Circle(r=5.0)</code></pre>
+
+      <!-- ── File IO ── -->
+      <h2 id="file-io">Работа с файлами</h2>
+      <p>Демонстрирует запись, чтение и обработку файлового содержимого.</p>
+
+      <div class="terminal-wrap">
+        <div class="terminal-bar">
+          <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+          <span class="label">file_io.goat</span>
+        </div>
+<pre><code><span class="kw">fun</span> <span class="fn">main</span> _ <span class="op">=</span>
+  <span class="kw">io</span> {
+    <span class="kw">let</span> path <span class="op">=</span> <span class="str">"examples/tmp_output.txt"</span>
+    <span class="kw">do!</span> <span class="fn">writeFile</span> path <span class="str">"Hello from Goat!\nLine 2\nLine 3\n"</span>
+    <span class="kw">let!</span> content <span class="op">=</span> readFile path
+    <span class="kw">do!</span> <span class="fn">println</span> <span class="str">"File contents:"</span>
+    <span class="kw">do!</span> <span class="fn">println</span> content
+    <span class="kw">let</span> lineCount <span class="op">=</span> <span class="fn">length</span> (<span class="fn">lines</span> content)
+    <span class="kw">do!</span> <span class="fn">println</span> (<span class="str">"Lines: "</span> <span class="op">++</span> <span class="fn">show</span> lineCount)
+    <span class="kw">let</span> wordList <span class="op">=</span> <span class="fn">words</span> content
+    <span class="kw">do!</span> <span class="fn">println</span> (<span class="str">"Words: "</span> <span class="op">++</span> <span class="fn">show</span> (<span class="fn">length</span> wordList))
+  }</code></pre>
+      </div>
+
+      <h3>Разница do! и let!</h3>
+      <table>
+        <thead><tr><th>Конструкция</th><th>Использование</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><code>do! action</code></td>
+            <td>Выполнить IO-действие ради побочного эффекта (вывод, запись файла). Результат игнорируется.</td>
+          </tr>
+          <tr>
+            <td><code>let! x = action</code></td>
+            <td>Выполнить IO-действие и <strong>связать результат</strong> с именем <code>x</code> (чтение файла, ввод).</td>
+          </tr>
+          <tr>
+            <td><code>let x = expr</code></td>
+            <td>Чистая привязка внутри IO-блока — без выполнения IO.</td>
+          </tr>
+        </tbody>
+      </table>
+
+    </div>
+  </div>
+</main>
+
+<footer>
+  <div class="footer-inner">
+    <span>Goat Language — учебный проект на F#</span>
+    <a href="index.html">На главную</a>
+  </div>
+</footer>
+
+</body>
+</html>
