@@ -1,0 +1,12 @@
+fun main _ =
+  io {
+    let path = "examples/tmp_output.txt"
+    do! writeFile path "Hello from Goat!\nLine 2\nLine 3\n"
+    let! content = readFile path
+    do! println "File contents:"
+    do! println content
+    let lineCount = length (lines content)
+    do! println ("Lines: " ++ show lineCount)
+    let wordList = words content
+    do! println ("Words: " ++ show (length wordList))
+  }

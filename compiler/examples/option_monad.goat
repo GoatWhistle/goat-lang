@@ -1,0 +1,37 @@
+fun safeDivide x y =
+  if y == 0 then None
+  else Some (x / y)
+
+fun safeHead xs =
+  match xs with
+  | []     => None
+  | x :: _ => Some x
+
+fun safeSqrt x =
+  if x < 0 then None
+  else Some (sqrt (toFloat x))
+
+fun pipeline x y =
+  bindOption (safeDivide 100 x) (\q ->
+  bindOption (safeSqrt q) (\r ->
+  bindOption (safeDivide (toInt r) y) (\result ->
+  Some result)))
+
+fun showOption opt =
+  match opt with
+  | None   => "None"
+  | Some x => "Some(" ++ show x ++ ")"
+
+fun main _ =
+  io {
+    do! println (showOption (safeDivide 10 2))
+    do! println (showOption (safeDivide 10 0))
+    do! println (showOption (safeHead [1, 2, 3]))
+    do! println (showOption (safeHead []))
+    do! println (showOption (safeSqrt 9))
+    do! println (showOption (safeSqrt (-1)))
+    do! println (showOption (pipeline 4 2))
+    do! println (showOption (pipeline 0 2))
+    let results = map (safeDivide 100) [1, 2, 5, 0, 10]
+    do! println (show (map showOption results))
+  }

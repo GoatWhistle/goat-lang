@@ -1,0 +1,41 @@
+fun rec quicksort cmp xs =
+  match xs with
+  | []      => []
+  | p :: rest =>
+      let smaller = filter (\x -> cmp x p) rest in
+      let greater = filter (\x -> not (cmp x p) && x /= p) rest in
+      let equal   = filter (\x -> x == p) rest in
+      append (quicksort cmp smaller) (append (p :: equal) (quicksort cmp greater))
+
+fun rec merge xs ys =
+  match (xs, ys) with
+  | ([], ys)          => ys
+  | (xs, [])          => xs
+  | (x :: xt, y :: yt) =>
+      if x <= y then x :: merge xt ys
+      else y :: merge xs yt
+
+fun rec mergesort xs =
+  let n = length xs in
+  if n <= 1 then xs
+  else
+    let half = n / 2 in
+    let left  = take half xs in
+    let right = drop half xs in
+    merge (mergesort left) (mergesort right)
+
+fun main _ =
+  io {
+    let nums = [64, 34, 25, 12, 22, 11, 90]
+    do! println "Original:"
+    do! println (show nums)
+    do! println "Quicksort ascending:"
+    do! println (show (quicksort (\a b -> a < b) nums))
+    do! println "Quicksort descending:"
+    do! println (show (quicksort (\a b -> a > b) nums))
+    do! println "Mergesort:"
+    do! println (show (mergesort nums))
+    let strs = ["banana", "apple", "cherry", "date", "elderberry"]
+    do! println "Sorted strings:"
+    do! println (show (quicksort (\a b -> a < b) strs))
+  }

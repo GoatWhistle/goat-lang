@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Strings · Goat</title>
+  <meta name="description" content="Standard library string functions: info, splitting, transforms, and parsing.">
+  <link rel="canonical" href="https://goatwhistle.github.io/goat-lang/docs/stdlib/strings/">
+  <link rel="icon" href="../../../assets/favicon.ico" sizes="32x32">
+  <link rel="icon" href="../../../assets/favicon-32.png" type="image/png">
+  <link rel="apple-touch-icon" href="../../../assets/apple-touch-icon.png">
+  <meta property="og:image" content="https://goatwhistle.github.io/goat-lang/assets/logo.jpg">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Strings · Goat">
+  <meta property="og:description" content="Standard library string functions: info, splitting, transforms, and parsing.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../../style.css">
+</head>
+<body>
+
+<a class="skip-link" href="#main">Skip to content</a>
+
+<header class="topnav">
+  <nav class="topnav-inner" aria-label="Main navigation">
+    <a class="brand" href="../../../">
+      <img class="brand-mark" src="../../../assets/logo.jpg" width="34" height="34" alt="" aria-hidden="true">
+      Goat
+    </a>
+    <div class="topnav-links">
+      <a href="../../../" class="active" aria-current="page">Docs</a>
+      <a href="https://github.com/GoatWhistle/goat-lang" class="nav-ext" aria-label="GitHub repository"><svg role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg></a>
+    </div>
+  </nav>
+</header>
+
+<main id="main">
+  <div class="page-wrap with-sidebar">
+
+      <aside class="sidebar">
+      <nav aria-label="Documentation">
+      <span class="sidebar-section">Getting started</span>
+      <a href="../../../">Overview</a>
+      <a href="../../installation/">Installation & CLI</a>
+      <span class="sidebar-section">Language</span>
+      <a href="../../comments-literals/">Comments & literals</a>
+      <a href="../../operators/">Operators</a>
+      <a href="../../bindings/">Bindings & functions</a>
+      <a href="../../control-flow/">Control flow</a>
+      <a href="../../data/">Lists, tuples & ADTs</a>
+      <a href="../../patterns/">Pattern matching</a>
+      <a href="../../lazy/">Lazy evaluation</a>
+      <a href="../io/">IO blocks</a>
+      <span class="sidebar-section">Standard library</span>
+      <a href="../types/">Option & Result</a>
+      <a href="../io/">IO functions</a>
+      <a href="../strings/" class="active" aria-current="page">Strings</a>
+      <a href="../math/">Math</a>
+      <a href="../lists/">Lists</a>
+      <a href="../utils/">Combinators & utilities</a>
+      <span class="sidebar-section">Examples</span>
+      <a href="../../examples/">Example programs</a>
+      </nav></aside>
+
+    <div class="content">
+      <h1>Strings</h1>
+      <p class="lead">Inspecting, splitting, transforming, and parsing strings.</p>
+
+      <h2 id="info">Info</h2>
+      <div class="fn-entry"><div class="fn-sig"><span class="fn">strLength</span> : <span class="tp">String</span> <span class="op">-></span> <span class="tp">Int</span></div><div class="fn-body"><p>The length of a string in characters.</p></div></div>
+      <div class="fn-entry"><div class="fn-sig"><span class="fn">contains</span> : <span class="tp">String</span> <span class="op">-></span> <span class="tp">String</span> <span class="op">-></span> <span class="tp">Bool</span></div><div class="fn-body"><p>Checks whether a string contains a substring.</p></div></div>
+
+      <h2 id="split">Splitting</h2>
+      <div class="fn-entry"><div class="fn-sig"><span class="fn">chars</span> : <span class="tp">String</span> <span class="op">-></span> <span class="tp">[String]</span></div><div class="fn-body"><p>Splits a string into a list of characters.</p></div></div>
+      <div class="fn-entry"><div class="fn-sig"><span class="fn">words</span> : <span class="tp">String</span> <span class="op">-></span> <span class="tp">[String]</span></div><div class="fn-body"><p>Splits a string into words on spaces and tabs.</p></div></div>
+      <div class="fn-entry"><div class="fn-sig"><span class="fn">lines</span> : <span class="tp">String</span> <span class="op">-></span> <span class="tp">[String]</span></div><div class="fn-body"><p>Splits a string into lines on <code>\n</code> and <code>\r</code>.</p></div></div>
+
+      <h2 id="transform">Transform</h2>
+      <div class="fn-entry"><div class="fn-sig"><span class="fn">trim</span> : <span class="tp">String</span> <span class="op">-></span> <span class="tp">String</span></div><div class="fn-body"><p>Removes whitespace from both ends of a string.</p></div></div>
+      <div class="fn-entry"><div class="fn-sig"><span class="fn">toUpper</span> / <span class="fn">toLower</span> : <span class="tp">String</span> <span class="op">-></span> <span class="tp">String</span></div><div class="fn-body"><p>Convert a string to upper- or lowercase.</p></div></div>
+      <div class="fn-entry"><div class="fn-sig"><span class="fn">replace</span> : <span class="tp">String</span> <span class="op">-></span> <span class="tp">String</span> <span class="op">-></span> <span class="tp">String</span> <span class="op">-></span> <span class="tp">String</span></div><div class="fn-body"><p>Replaces every occurrence of a substring. <code>replace string old new</code>.</p></div></div>
+      <div class="fn-entry"><div class="fn-sig"><span class="fn">unwords</span> / <span class="fn">unlines</span> : <span class="tp">[String]</span> <span class="op">-></span> <span class="tp">String</span></div><div class="fn-body"><p>Join a list of words with spaces, or lines with <code>\n</code>.</p></div></div>
+
+      <h2 id="parse">Parsing</h2>
+      <div class="fn-entry"><div class="fn-sig"><span class="fn">parseInt</span> : <span class="tp">String</span> <span class="op">-></span> <span class="tp">Option Int</span></div><div class="fn-body"><p>Parses a string as an integer. Returns <code>Some n</code> or <code>None</code>.</p></div></div>
+      <div class="fn-entry"><div class="fn-sig"><span class="fn">parseFloat</span> : <span class="tp">String</span> <span class="op">-></span> <span class="tp">Option Float</span></div><div class="fn-body"><p>Parses a string as a floating-point number.</p></div></div>
+      <nav class="pager" aria-label="Pagination"><a class="pn pn-prev" href="../io/"><span class="pn-dir">&larr; Previous</span><span class="pn-title">IO functions</span></a><a class="pn pn-next" href="../math/"><span class="pn-dir">Next &rarr;</span><span class="pn-title">Math</span></a></nav>
+    </div>
+  </div>
+</main>
+
+<footer>
+  <div class="footer-inner">
+    <span>&copy; 2026 <a href="https://github.com/GoatWhistle">GoatWhistle</a></span>
+    <span class="footer-center"><a href="https://github.com/GoatWhistle/goat-lang/blob/main/LICENSE">MIT License</a></span>
+    <span><a href="https://github.com/GoatWhistle/goat-lang">GitHub</a></span>
+  </div>
+</footer>
+
+</body>
+</html>

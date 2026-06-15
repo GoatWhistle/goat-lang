@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Lists · Goat</title>
+  <meta name="description" content="Standard library list functions: basics, higher-order, search, transform, and lazy lists.">
+  <link rel="canonical" href="https://goatwhistle.github.io/goat-lang/docs/stdlib/lists/">
+  <link rel="icon" href="../../../assets/favicon.ico" sizes="32x32">
+  <link rel="icon" href="../../../assets/favicon-32.png" type="image/png">
+  <link rel="apple-touch-icon" href="../../../assets/apple-touch-icon.png">
+  <meta property="og:image" content="https://goatwhistle.github.io/goat-lang/assets/logo.jpg">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Lists · Goat">
+  <meta property="og:description" content="Standard library list functions: basics, higher-order, search, transform, and lazy lists.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../../style.css">
+</head>
+<body>
+
+<a class="skip-link" href="#main">Skip to content</a>
+
+<header class="topnav">
+  <nav class="topnav-inner" aria-label="Main navigation">
+    <a class="brand" href="../../../">
+      <img class="brand-mark" src="../../../assets/logo.jpg" width="34" height="34" alt="" aria-hidden="true">
+      Goat
+    </a>
+    <div class="topnav-links">
+      <a href="../../../" class="active" aria-current="page">Docs</a>
+      <a href="https://github.com/GoatWhistle/goat-lang" class="nav-ext" aria-label="GitHub repository"><svg role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg></a>
+    </div>
+  </nav>
+</header>
+
+<main id="main">
+  <div class="page-wrap with-sidebar">
+
+      <aside class="sidebar">
+      <nav aria-label="Documentation">
+      <span class="sidebar-section">Getting started</span>
+      <a href="../../../">Overview</a>
+      <a href="../../installation/">Installation & CLI</a>
+      <span class="sidebar-section">Language</span>
+      <a href="../../comments-literals/">Comments & literals</a>
+      <a href="../../operators/">Operators</a>
+      <a href="../../bindings/">Bindings & functions</a>
+      <a href="../../control-flow/">Control flow</a>
+      <a href="../../data/">Lists, tuples & ADTs</a>
+      <a href="../../patterns/">Pattern matching</a>
+      <a href="../../lazy/">Lazy evaluation</a>
+      <a href="../io/">IO blocks</a>
+      <span class="sidebar-section">Standard library</span>
+      <a href="../types/">Option & Result</a>
+      <a href="../io/">IO functions</a>
+      <a href="../strings/">Strings</a>
+      <a href="../math/">Math</a>
+      <a href="../lists/" class="active" aria-current="page">Lists</a>
+      <a href="../utils/">Combinators & utilities</a>
+      <span class="sidebar-section">Examples</span>
+      <a href="../../examples/">Example programs</a>
+      </nav></aside>
+
+    <div class="content">
+      <h1>Lists</h1>
+      <p class="lead">Working with finite and lazy lists.</p>
+
+      <h2 id="basics">Basics</h2>
+      <table>
+        <thead><tr><th>Function</th><th>Type</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td><code>head xs</code> / <code>tail xs</code></td><td>[a] → a / [a] → [a]</td><td>First element / everything after it</td></tr>
+          <tr><td><code>last xs</code> / <code>init xs</code></td><td>[a] → a / [a] → [a]</td><td>Last element / everything before it</td></tr>
+          <tr><td><code>length xs</code></td><td>[a] → Int</td><td>List length</td></tr>
+          <tr><td><code>null xs</code></td><td>[a] → Bool</td><td>Whether the list is empty</td></tr>
+          <tr><td><code>nth n xs</code></td><td>Int → [a] → a</td><td>Element at index (0-based)</td></tr>
+          <tr><td><code>reverse xs</code> / <code>sort xs</code></td><td>[a] → [a]</td><td>Reverse / sort</td></tr>
+          <tr><td><code>append xs ys</code> / <code>concat xss</code></td><td>—</td><td>Concatenate / flatten</td></tr>
+        </tbody>
+      </table>
+
+      <h2 id="higher-order">Higher-order</h2>
+      <div class="fn-entry"><div class="fn-sig"><span class="fn">map</span> : (<span class="tp">a</span> <span class="op">-></span> <span class="tp">b</span>) <span class="op">-></span> <span class="tp">[a]</span> <span class="op">-></span> <span class="tp">[b]</span></div><div class="fn-body"><p>Applies a function to every element.</p><div class="example"><pre><code><span class="fn">map</span> (\x <span class="op">-></span> x <span class="op">*</span> <span class="num">2</span>) [<span class="num">1</span>, <span class="num">2</span>, <span class="num">3</span>]  <span class="cmt">-- [2, 4, 6]</span></code></pre></div></div></div>
+      <div class="fn-entry"><div class="fn-sig"><span class="fn">filter</span> : (<span class="tp">a</span> <span class="op">-></span> <span class="tp">Bool</span>) <span class="op">-></span> <span class="tp">[a]</span> <span class="op">-></span> <span class="tp">[a]</span></div><div class="fn-body"><p>Keeps only the elements that satisfy the predicate.</p></div></div>
+      <div class="fn-entry"><div class="fn-sig"><span class="fn">fold</span> : (<span class="tp">acc</span> <span class="op">-></span> <span class="tp">a</span> <span class="op">-></span> <span class="tp">acc</span>) <span class="op">-></span> <span class="tp">acc</span> <span class="op">-></span> <span class="tp">[a]</span> <span class="op">-></span> <span class="tp">acc</span></div><div class="fn-body"><p>Left fold (foldl).</p><div class="example"><pre><code><span class="fn">fold</span> (\acc x <span class="op">-></span> acc <span class="op">+</span> x) <span class="num">0</span> [<span class="num">1</span>..<span class="num">5</span>]   <span class="cmt">-- 15</span></code></pre></div></div></div>
+      <div class="fn-entry"><div class="fn-sig"><span class="fn">foldr</span> : (<span class="tp">a</span> <span class="op">-></span> <span class="tp">acc</span> <span class="op">-></span> <span class="tp">acc</span>) <span class="op">-></span> <span class="tp">acc</span> <span class="op">-></span> <span class="tp">[a]</span> <span class="op">-></span> <span class="tp">acc</span></div><div class="fn-body"><p>Right fold (foldr).</p></div></div>
+      <div class="fn-entry"><div class="fn-sig"><span class="fn">concatMap</span> / <span class="fn">zipWith</span> / <span class="fn">scan</span></div><div class="fn-body"><p>Flat-map, pairwise combine two lists, and fold that keeps every intermediate accumulator.</p></div></div>
+
+      <h2 id="search">Search</h2>
+      <table>
+        <thead><tr><th>Function</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td><code>any pred xs</code></td><td>Whether any element satisfies the predicate</td></tr>
+          <tr><td><code>all pred xs</code></td><td>Whether every element satisfies the predicate</td></tr>
+          <tr><td><code>elem x xs</code></td><td>Whether the element is in the list</td></tr>
+        </tbody>
+      </table>
+
+      <h2 id="transform">Transform</h2>
+      <table>
+        <thead><tr><th>Function</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td><code>take n xs</code> / <code>drop n xs</code></td><td>First n elements / everything after them</td></tr>
+          <tr><td><code>takeWhile pred xs</code> / <code>dropWhile pred xs</code></td><td>Leading run while the predicate holds</td></tr>
+          <tr><td><code>zip xs ys</code> / <code>unzip pairs</code></td><td>Pair up / split apart</td></tr>
+          <tr><td><code>replicate n x</code> / <code>range lo hi</code></td><td>n copies / inclusive integer range</td></tr>
+        </tbody>
+      </table>
+
+      <h2 id="lazy">Lazy lists</h2>
+      <div class="fn-entry"><div class="fn-sig"><span class="fn">lazyFilter</span> : (<span class="tp">a</span> <span class="op">-></span> <span class="tp">Bool</span>) <span class="op">-></span> <span class="tp">[a]</span> <span class="op">-></span> <span class="tp">[a]</span></div><div class="fn-body"><p>A filter for lazy (possibly infinite) lists. The tail is forced on demand.</p></div></div>
+      <div class="fn-entry"><div class="fn-sig"><span class="fn">iterate</span> : (<span class="tp">a</span> <span class="op">-></span> <span class="tp">a</span>) <span class="op">-></span> <span class="tp">a</span> <span class="op">-></span> <span class="tp">[a]</span></div><div class="fn-body"><p>An infinite list: <code>x, f(x), f(f(x)), …</code></p></div></div>
+      <div class="fn-entry"><div class="fn-sig"><span class="fn">repeat</span> : <span class="tp">a</span> <span class="op">-></span> <span class="tp">[a]</span> &nbsp;&nbsp; <span class="fn">natsFrom</span> : <span class="tp">Int</span> <span class="op">-></span> <span class="tp">[Int]</span></div><div class="fn-body"><p>An infinite repeat, and an infinite stream of naturals (<code>nats</code> starts at 0).</p></div></div>
+      <nav class="pager" aria-label="Pagination"><a class="pn pn-prev" href="../math/"><span class="pn-dir">&larr; Previous</span><span class="pn-title">Math</span></a><a class="pn pn-next" href="../utils/"><span class="pn-dir">Next &rarr;</span><span class="pn-title">Combinators & utilities</span></a></nav>
+    </div>
+  </div>
+</main>
+
+<footer>
+  <div class="footer-inner">
+    <span>&copy; 2026 <a href="https://github.com/GoatWhistle">GoatWhistle</a></span>
+    <span class="footer-center"><a href="https://github.com/GoatWhistle/goat-lang/blob/main/LICENSE">MIT License</a></span>
+    <span><a href="https://github.com/GoatWhistle/goat-lang">GitHub</a></span>
+  </div>
+</footer>
+
+</body>
+</html>

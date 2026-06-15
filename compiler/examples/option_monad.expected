@@ -1,0 +1,9 @@
+Some(5)
+None
+Some(1)
+None
+Some(3.0)
+None
+Some(2)
+None
+["Some(100)", "Some(50)", "Some(20)", "None", "Some(10)"]

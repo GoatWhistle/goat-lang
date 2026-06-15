@@ -1,0 +1,19 @@
+fun rec fib n =
+  match n with
+  | 0 => 0
+  | 1 => 1
+  | n => fib (n - 1) + fib (n - 2)
+
+fun rec fibFast a b n =
+  if n == 0 then a
+  else fibFast b (a + b) (n - 1)
+
+let fibStream = zipWith (\a b -> (a, b)) nats (map fib [0..10])
+
+fun main _ =
+  io {
+    do! println "Naive fibonacci:"
+    do! println (show (map fib [0..9]))
+    do! println "Fast fibonacci:"
+    do! println (show (map (fibFast 0 1) [0..9]))
+  }

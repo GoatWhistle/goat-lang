@@ -1,0 +1,10 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/Goat.Cli/Goat.Cli.fsproj" />
+    <Project Path="src/Goat.Core/Goat.Core.fsproj" />
+    <Project Path="src/Goat.Repl/Goat.Repl.fsproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/Goat.Tests/Goat.Tests.fsproj" />
+  </Folder>
+</Solution>

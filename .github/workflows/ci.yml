@@ -1,0 +1,45 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'compiler/**'
+      - '.github/workflows/ci.yml'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'compiler/**'
+      - '.github/workflows/ci.yml'
+
+defaults:
+  run:
+    working-directory: compiler
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+
+      - name: Restore
+        run: dotnet restore Goat.slnx
+
+      - name: Build
+        run: dotnet build Goat.slnx --no-restore --configuration Release
+
+      - name: Test
+        run: dotnet test Goat.slnx --no-build --configuration Release --logger "console;verbosity=normal"
+
+      - name: Smoke test examples
+        run: |
+          for f in examples/*.goat; do
+            echo "=== $f ==="
+            dotnet run --project src/Goat.Cli --configuration Release -- run "$f"
+          done

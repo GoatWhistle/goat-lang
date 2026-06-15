@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Control flow · Goat</title>
+  <meta name="description" content="Conditionals, match expressions, and guards in Goat.">
+  <link rel="canonical" href="https://goatwhistle.github.io/goat-lang/docs/control-flow/">
+  <link rel="icon" href="../../assets/favicon.ico" sizes="32x32">
+  <link rel="icon" href="../../assets/favicon-32.png" type="image/png">
+  <link rel="apple-touch-icon" href="../../assets/apple-touch-icon.png">
+  <meta property="og:image" content="https://goatwhistle.github.io/goat-lang/assets/logo.jpg">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Control flow · Goat">
+  <meta property="og:description" content="Conditionals, match expressions, and guards in Goat.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../style.css">
+</head>
+<body>
+
+<a class="skip-link" href="#main">Skip to content</a>
+
+<header class="topnav">
+  <nav class="topnav-inner" aria-label="Main navigation">
+    <a class="brand" href="../../">
+      <img class="brand-mark" src="../../assets/logo.jpg" width="34" height="34" alt="" aria-hidden="true">
+      Goat
+    </a>
+    <div class="topnav-links">
+      <a href="../" class="active" aria-current="page">Docs</a>
+      <a href="https://github.com/GoatWhistle/goat-lang" class="nav-ext" aria-label="GitHub repository"><svg role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg></a>
+    </div>
+  </nav>
+</header>
+
+<main id="main">
+  <div class="page-wrap with-sidebar">
+
+      <aside class="sidebar">
+      <nav aria-label="Documentation">
+      <span class="sidebar-section">Getting started</span>
+      <a href="../">Overview</a>
+      <a href="../installation/">Installation & CLI</a>
+      <span class="sidebar-section">Language</span>
+      <a href="../comments-literals/">Comments & literals</a>
+      <a href="../operators/">Operators</a>
+      <a href="../bindings/">Bindings & functions</a>
+      <a href="../control-flow/" class="active" aria-current="page">Control flow</a>
+      <a href="../data/">Lists, tuples & ADTs</a>
+      <a href="../patterns/">Pattern matching</a>
+      <a href="../lazy/">Lazy evaluation</a>
+      <a href="../io/">IO blocks</a>
+      <span class="sidebar-section">Standard library</span>
+      <a href="../stdlib/types/">Option & Result</a>
+      <a href="../stdlib/io/">IO functions</a>
+      <a href="../stdlib/strings/">Strings</a>
+      <a href="../stdlib/math/">Math</a>
+      <a href="../stdlib/lists/">Lists</a>
+      <a href="../stdlib/utils/">Combinators & utilities</a>
+      <span class="sidebar-section">Examples</span>
+      <a href="../examples/">Example programs</a>
+      </nav></aside>
+
+    <div class="content">
+      <h1>Control flow</h1>
+      <p class="lead">Branching with <code>if</code>, <code>match</code>, and guards.</p>
+
+      <h2 id="if">if / then / else</h2>
+      <p>A conditional expression. The <code>else</code> branch is <strong>always</strong> required: both branches must produce a value of the same type.</p>
+      <pre><code><span class="kw">let</span> sign x <span class="op">=</span>
+  <span class="kw">if</span> x <span class="op">&gt;</span> <span class="num">0</span> <span class="kw">then</span> <span class="str">"positive"</span>
+  <span class="kw">else if</span> x <span class="op">&lt;</span> <span class="num">0</span> <span class="kw">then</span> <span class="str">"negative"</span>
+  <span class="kw">else</span> <span class="str">"zero"</span>
+
+<span class="kw">let</span> abs x <span class="op">=</span> <span class="kw">if</span> x <span class="op">&lt;</span> <span class="num">0</span> <span class="kw">then</span> <span class="op">-</span>x <span class="kw">else</span> x</code></pre>
+
+      <h2 id="match">match — pattern matching</h2>
+      <p>Matches a value against a sequence of patterns. Each branch reads <code>| pattern => body</code>.</p>
+      <pre><code><span class="kw">fun</span> <span class="fn">describe</span> n <span class="op">=</span>
+  <span class="kw">match</span> n <span class="kw">with</span>
+  <span class="op">|</span> <span class="num">0</span>   <span class="op">=></span> <span class="str">"zero"</span>
+  <span class="op">|</span> <span class="num">1</span>   <span class="op">=></span> <span class="str">"one"</span>
+  <span class="op">|</span> _   <span class="op">=></span> <span class="str">"many"</span>
+
+<span class="kw">fun</span> <span class="fn">sumList</span> xs <span class="op">=</span>
+  <span class="kw">match</span> xs <span class="kw">with</span>
+  <span class="op">|</span> []         <span class="op">=></span> <span class="num">0</span>
+  <span class="op">|</span> x <span class="op">::</span> rest  <span class="op">=></span> x <span class="op">+</span> <span class="fn">sumList</span> rest</code></pre>
+
+      <h2 id="guards">Guards (when)</h2>
+      <p>A pattern can carry an extra condition through <code>when</code>:</p>
+      <pre><code><span class="kw">fun</span> <span class="fn">classify</span> n <span class="op">=</span>
+  <span class="kw">match</span> n <span class="kw">with</span>
+  <span class="op">|</span> x <span class="kw">when</span> x <span class="op">&lt;</span> <span class="num">0</span>   <span class="op">=></span> <span class="str">"negative"</span>
+  <span class="op">|</span> x <span class="kw">when</span> x <span class="op">==</span> <span class="num">0</span>  <span class="op">=></span> <span class="str">"zero"</span>
+  <span class="op">|</span> x <span class="kw">when</span> x <span class="op">&lt;</span> <span class="num">10</span>  <span class="op">=></span> <span class="str">"small"</span>
+  <span class="op">|</span> _              <span class="op">=></span> <span class="str">"large"</span></code></pre>
+      <nav class="pager" aria-label="Pagination"><a class="pn pn-prev" href="../bindings/"><span class="pn-dir">&larr; Previous</span><span class="pn-title">Bindings & functions</span></a><a class="pn pn-next" href="../data/"><span class="pn-dir">Next &rarr;</span><span class="pn-title">Lists, tuples & ADTs</span></a></nav>
+    </div>
+  </div>
+</main>
+
+<footer>
+  <div class="footer-inner">
+    <span>&copy; 2026 <a href="https://github.com/GoatWhistle">GoatWhistle</a></span>
+    <span class="footer-center"><a href="https://github.com/GoatWhistle/goat-lang/blob/main/LICENSE">MIT License</a></span>
+    <span><a href="https://github.com/GoatWhistle/goat-lang">GitHub</a></span>
+  </div>
+</footer>
+
+</body>
+</html>

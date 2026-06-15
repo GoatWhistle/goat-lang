@@ -1,0 +1,11 @@
+fun rec factorial n =
+  if n <= 1 then 1
+  else n * factorial (n - 1)
+
+fun main _ =
+  io {
+    do! println (show (factorial 0))
+    do! println (show (factorial 1))
+    do! println (show (factorial 5))
+    do! println (show (factorial 10))
+  }

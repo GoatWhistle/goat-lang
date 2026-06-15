@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Math · Goat</title>
+  <meta name="description" content="Standard library math: basics, trigonometry, conversion, and constants.">
+  <link rel="canonical" href="https://goatwhistle.github.io/goat-lang/docs/stdlib/math/">
+  <link rel="icon" href="../../../assets/favicon.ico" sizes="32x32">
+  <link rel="icon" href="../../../assets/favicon-32.png" type="image/png">
+  <link rel="apple-touch-icon" href="../../../assets/apple-touch-icon.png">
+  <meta property="og:image" content="https://goatwhistle.github.io/goat-lang/assets/logo.jpg">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Math · Goat">
+  <meta property="og:description" content="Standard library math: basics, trigonometry, conversion, and constants.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../../style.css">
+</head>
+<body>
+
+<a class="skip-link" href="#main">Skip to content</a>
+
+<header class="topnav">
+  <nav class="topnav-inner" aria-label="Main navigation">
+    <a class="brand" href="../../../">
+      <img class="brand-mark" src="../../../assets/logo.jpg" width="34" height="34" alt="" aria-hidden="true">
+      Goat
+    </a>
+    <div class="topnav-links">
+      <a href="../../../" class="active" aria-current="page">Docs</a>
+      <a href="https://github.com/GoatWhistle/goat-lang" class="nav-ext" aria-label="GitHub repository"><svg role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg></a>
+    </div>
+  </nav>
+</header>
+
+<main id="main">
+  <div class="page-wrap with-sidebar">
+
+      <aside class="sidebar">
+      <nav aria-label="Documentation">
+      <span class="sidebar-section">Getting started</span>
+      <a href="../../../">Overview</a>
+      <a href="../../installation/">Installation & CLI</a>
+      <span class="sidebar-section">Language</span>
+      <a href="../../comments-literals/">Comments & literals</a>
+      <a href="../../operators/">Operators</a>
+      <a href="../../bindings/">Bindings & functions</a>
+      <a href="../../control-flow/">Control flow</a>
+      <a href="../../data/">Lists, tuples & ADTs</a>
+      <a href="../../patterns/">Pattern matching</a>
+      <a href="../../lazy/">Lazy evaluation</a>
+      <a href="../io/">IO blocks</a>
+      <span class="sidebar-section">Standard library</span>
+      <a href="../types/">Option & Result</a>
+      <a href="../io/">IO functions</a>
+      <a href="../strings/">Strings</a>
+      <a href="../math/" class="active" aria-current="page">Math</a>
+      <a href="../lists/">Lists</a>
+      <a href="../utils/">Combinators & utilities</a>
+      <span class="sidebar-section">Examples</span>
+      <a href="../../examples/">Example programs</a>
+      </nav></aside>
+
+    <div class="content">
+      <h1>Math</h1>
+      <p class="lead">Numeric functions and constants.</p>
+
+      <h2 id="basics">Basics</h2>
+      <table>
+        <thead><tr><th>Function</th><th>Type</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td><code>abs x</code></td><td>Num → Num</td><td>Absolute value</td></tr>
+          <tr><td><code>max a b</code> / <code>min a b</code></td><td>Num → Num → Num</td><td>Maximum / minimum</td></tr>
+          <tr><td><code>sqrt x</code></td><td>Num → Float</td><td>Square root</td></tr>
+          <tr><td><code>floor x</code> / <code>ceil x</code> / <code>round x</code></td><td>Num → Float</td><td>Rounding</td></tr>
+          <tr><td><code>exp x</code></td><td>Num → Float</td><td>e<sup>x</sup></td></tr>
+          <tr><td><code>log x</code> / <code>log2 x</code> / <code>log10 x</code></td><td>Num → Float</td><td>Logarithms</td></tr>
+        </tbody>
+      </table>
+
+      <h2 id="trig">Trigonometry</h2>
+      <table>
+        <thead><tr><th>Function</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td><code>sin x</code></td><td>Sine (radians)</td></tr>
+          <tr><td><code>cos x</code></td><td>Cosine</td></tr>
+          <tr><td><code>tan x</code></td><td>Tangent</td></tr>
+        </tbody>
+      </table>
+
+      <h2 id="convert">Conversion</h2>
+      <div class="fn-entry"><div class="fn-sig"><span class="fn">toFloat</span> : <span class="tp">Int</span> <span class="op">-></span> <span class="tp">Float</span></div><div class="fn-body"><p>Converts an Int to a Float.</p></div></div>
+      <div class="fn-entry"><div class="fn-sig"><span class="fn">toInt</span> : <span class="tp">Float</span> <span class="op">-></span> <span class="tp">Int</span></div><div class="fn-body"><p>Converts a Float to an Int (truncation).</p></div></div>
+
+      <h2 id="constants">Constants</h2>
+      <table>
+        <thead><tr><th>Name</th><th>Value</th></tr></thead>
+        <tbody>
+          <tr><td><code>pi</code></td><td>3.14159265358979…</td></tr>
+          <tr><td><code>e</code></td><td>2.71828182845904…</td></tr>
+        </tbody>
+      </table>
+      <nav class="pager" aria-label="Pagination"><a class="pn pn-prev" href="../strings/"><span class="pn-dir">&larr; Previous</span><span class="pn-title">Strings</span></a><a class="pn pn-next" href="../lists/"><span class="pn-dir">Next &rarr;</span><span class="pn-title">Lists</span></a></nav>
+    </div>
+  </div>
+</main>
+
+<footer>
+  <div class="footer-inner">
+    <span>&copy; 2026 <a href="https://github.com/GoatWhistle">GoatWhistle</a></span>
+    <span class="footer-center"><a href="https://github.com/GoatWhistle/goat-lang/blob/main/LICENSE">MIT License</a></span>
+    <span><a href="https://github.com/GoatWhistle/goat-lang">GitHub</a></span>
+  </div>
+</footer>
+
+</body>
+</html>

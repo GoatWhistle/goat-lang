@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Example programs · Goat</title>
+  <meta name="description" content="Annotated Goat programs: factorial, Fibonacci, list operations, sorting, lazy streams, the Option monad, ADTs, and file IO.">
+  <link rel="canonical" href="https://goatwhistle.github.io/goat-lang/docs/examples/">
+  <link rel="icon" href="../../assets/favicon.ico" sizes="32x32">
+  <link rel="icon" href="../../assets/favicon-32.png" type="image/png">
+  <link rel="apple-touch-icon" href="../../assets/apple-touch-icon.png">
+  <meta property="og:image" content="https://goatwhistle.github.io/goat-lang/assets/logo.jpg">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Example programs · Goat">
+  <meta property="og:description" content="Annotated Goat programs: factorial, Fibonacci, list operations, sorting, lazy streams, the Option monad, ADTs, and file IO.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../style.css">
+</head>
+<body>
+
+<a class="skip-link" href="#main">Skip to content</a>
+
+<header class="topnav">
+  <nav class="topnav-inner" aria-label="Main navigation">
+    <a class="brand" href="../../">
+      <img class="brand-mark" src="../../assets/logo.jpg" width="34" height="34" alt="" aria-hidden="true">
+      Goat
+    </a>
+    <div class="topnav-links">
+      <a href="../" class="active" aria-current="page">Docs</a>
+      <a href="https://github.com/GoatWhistle/goat-lang" class="nav-ext" aria-label="GitHub repository"><svg role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg></a>
+    </div>
+  </nav>
+</header>
+
+<main id="main">
+  <div class="page-wrap with-sidebar">
+
+      <aside class="sidebar">
+      <nav aria-label="Documentation">
+      <span class="sidebar-section">Getting started</span>
+      <a href="../">Overview</a>
+      <a href="../installation/">Installation & CLI</a>
+      <span class="sidebar-section">Language</span>
+      <a href="../comments-literals/">Comments & literals</a>
+      <a href="../operators/">Operators</a>
+      <a href="../bindings/">Bindings & functions</a>
+      <a href="../control-flow/">Control flow</a>
+      <a href="../data/">Lists, tuples & ADTs</a>
+      <a href="../patterns/">Pattern matching</a>
+      <a href="../lazy/">Lazy evaluation</a>
+      <a href="../io/">IO blocks</a>
+      <span class="sidebar-section">Standard library</span>
+      <a href="../stdlib/types/">Option & Result</a>
+      <a href="../stdlib/io/">IO functions</a>
+      <a href="../stdlib/strings/">Strings</a>
+      <a href="../stdlib/math/">Math</a>
+      <a href="../stdlib/lists/">Lists</a>
+      <a href="../stdlib/utils/">Combinators & utilities</a>
+      <span class="sidebar-section">Examples</span>
+      <a href="../examples/" class="active" aria-current="page">Example programs</a>
+      </nav></aside>
+
+    <div class="content">
+      <h1>Example programs</h1>
+      <p class="lead">Complete programs from the <code>examples/</code> directory, explained in detail.</p>
+
+      <h2 id="factorial">Factorial — recursion and IO</h2>
+      <p>The classic recursive function: <code>fun rec</code>, <code>if/then/else</code>, and an IO block.</p>
+      <div class="terminal-wrap"><div class="terminal-bar"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="label">factorial.goat</span></div>
+<pre><code><span class="kw">fun rec</span> <span class="fn">factorial</span> n <span class="op">=</span>
+  <span class="kw">if</span> n <span class="op">&lt;=</span> <span class="num">1</span> <span class="kw">then</span> <span class="num">1</span>
+  <span class="kw">else</span> n <span class="op">*</span> <span class="fn">factorial</span> (n <span class="op">-</span> <span class="num">1</span>)
+
+<span class="kw">fun</span> <span class="fn">main</span> _ <span class="op">=</span>
+  <span class="kw">io</span> {
+    <span class="kw">do!</span> <span class="fn">println</span> (<span class="fn">show</span> (<span class="fn">factorial</span> <span class="num">10</span>))   <span class="cmt">-- 3628800</span>
+  }</code></pre></div>
+
+      <h2 id="fibonacci">Fibonacci — three approaches</h2>
+      <p>Naive recursion, a tail-recursive version, and an infinite lazy stream.</p>
+      <div class="terminal-wrap"><div class="terminal-bar"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="label">fibonacci.goat</span></div>
+<pre><code><span class="kw">fun rec</span> <span class="fn">fib</span> n <span class="op">=</span>
+  <span class="kw">match</span> n <span class="kw">with</span>
+  <span class="op">|</span> <span class="num">0</span> <span class="op">=></span> <span class="num">0</span>
+  <span class="op">|</span> <span class="num">1</span> <span class="op">=></span> <span class="num">1</span>
+  <span class="op">|</span> n <span class="op">=></span> <span class="fn">fib</span> (n <span class="op">-</span> <span class="num">1</span>) <span class="op">+</span> <span class="fn">fib</span> (n <span class="op">-</span> <span class="num">2</span>)
+
+<span class="kw">fun rec</span> <span class="fn">fibs</span> a b <span class="op">=</span> a <span class="op">::</span> <span class="kw">lazy</span> (<span class="fn">fibs</span> b (a <span class="op">+</span> b))
+<span class="kw">let</span> fibStream <span class="op">=</span> <span class="fn">fibs</span> <span class="num">0</span> <span class="num">1</span>   <span class="cmt">-- take 10 -> [0,1,1,2,3,5,8,13,21,34]</span></code></pre></div>
+
+      <h2 id="list-ops">List operations</h2>
+      <p>Sorting, folding, mapping, filtering, and zip over plain lists.</p>
+      <div class="terminal-wrap"><div class="terminal-bar"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="label">list_ops.goat</span></div>
+<pre><code><span class="kw">fun rec</span> <span class="fn">quicksort</span> xs <span class="op">=</span>
+  <span class="kw">match</span> xs <span class="kw">with</span>
+  <span class="op">|</span> []       <span class="op">=></span> []
+  <span class="op">|</span> p <span class="op">::</span> rest <span class="op">=></span>
+      <span class="kw">let</span> smaller <span class="op">=</span> <span class="fn">filter</span> (\x <span class="op">-></span> x <span class="op">&lt;</span> p) rest <span class="kw">in</span>
+      <span class="kw">let</span> greater <span class="op">=</span> <span class="fn">filter</span> (\x <span class="op">-></span> x <span class="op">&gt;=</span> p) rest <span class="kw">in</span>
+      <span class="fn">append</span> (<span class="fn">quicksort</span> smaller) (p <span class="op">::</span> <span class="fn">quicksort</span> greater)</code></pre></div>
+
+      <h2 id="quicksort">Sorting — comparison functions</h2>
+      <p>A parameterized quicksort: the comparator is passed as an argument, so one implementation covers any ordering.</p>
+      <div class="terminal-wrap"><div class="terminal-bar"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="label">quicksort.goat</span></div>
+<pre><code><span class="kw">fun rec</span> <span class="fn">quicksort</span> cmp xs <span class="op">=</span>
+  <span class="kw">match</span> xs <span class="kw">with</span>
+  <span class="op">|</span> []       <span class="op">=></span> []
+  <span class="op">|</span> p <span class="op">::</span> rest <span class="op">=></span>
+      <span class="kw">let</span> smaller <span class="op">=</span> <span class="fn">filter</span> (\x <span class="op">-></span> <span class="fn">cmp</span> x p) rest <span class="kw">in</span>
+      <span class="kw">let</span> greater <span class="op">=</span> <span class="fn">filter</span> (\x <span class="op">-></span> <span class="kw">not</span> (<span class="fn">cmp</span> x p) <span class="op">&amp;&amp;</span> x <span class="op">/=</span> p) rest <span class="kw">in</span>
+      <span class="fn">append</span> (<span class="fn">quicksort</span> cmp smaller) (p <span class="op">::</span> <span class="fn">quicksort</span> cmp greater)</code></pre></div>
+
+      <h2 id="lazy-streams">Lazy streams — infinite sequences</h2>
+      <p>The sieve of Eratosthenes and other infinite streams.</p>
+      <div class="terminal-wrap"><div class="terminal-bar"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="label">lazy_streams.goat</span></div>
+<pre><code><span class="cmt">-- Sieve of Eratosthenes</span>
+<span class="kw">fun rec</span> <span class="fn">sieve</span> xs <span class="op">=</span>
+  <span class="kw">match</span> xs <span class="kw">with</span>
+  <span class="op">|</span> []       <span class="op">=></span> []
+  <span class="op">|</span> p <span class="op">::</span> rest <span class="op">=></span>
+      <span class="kw">let</span> ps <span class="op">=</span> <span class="fn">lazyFilter</span> (\x <span class="op">-></span> x <span class="kw">mod</span> p <span class="op">/=</span> <span class="num">0</span>) (<span class="kw">force</span> rest)
+      <span class="kw">in</span> p <span class="op">::</span> <span class="kw">lazy</span> (<span class="fn">sieve</span> ps)
+
+<span class="kw">let</span> primes <span class="op">=</span> <span class="fn">sieve</span> (<span class="fn">natsFrom</span> <span class="num">2</span>)   <span class="cmt">-- take 10 -> [2,3,5,7,11,13,17,19,23,29]</span></code></pre></div>
+
+      <h2 id="option-monad">The Option monad — safe computation</h2>
+      <p>Chaining fallible steps with <code>bindOption</code>; the first <code>None</code> short-circuits the rest.</p>
+      <div class="terminal-wrap"><div class="terminal-bar"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="label">option_monad.goat</span></div>
+<pre><code><span class="kw">fun</span> <span class="fn">safeDivide</span> x y <span class="op">=</span>
+  <span class="kw">if</span> y <span class="op">==</span> <span class="num">0</span> <span class="kw">then</span> <span class="tp">None</span>
+  <span class="kw">else</span> <span class="tp">Some</span> (x <span class="op">/</span> y)
+
+<span class="kw">fun</span> <span class="fn">pipeline</span> x <span class="op">=</span>
+  <span class="fn">bindOption</span> (<span class="fn">safeDivide</span> <span class="num">100</span> x) (\q <span class="op">-></span>
+  <span class="tp">Some</span> (<span class="fn">show</span> q))</code></pre></div>
+
+      <h2 id="shapes">Algebraic data types — shapes</h2>
+      <p>An ADT with multi-field constructors and exhaustive matching for area and perimeter.</p>
+      <div class="terminal-wrap"><div class="terminal-bar"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="label">shapes.goat</span></div>
+<pre><code><span class="kw">type</span> <span class="tp">Shape</span> <span class="op">=</span>
+  <span class="op">|</span> <span class="tp">Circle</span>    <span class="kw">of</span> radius
+  <span class="op">|</span> <span class="tp">Rectangle</span> <span class="kw">of</span> width height
+
+<span class="kw">fun</span> <span class="fn">area</span> shape <span class="op">=</span>
+  <span class="kw">match</span> shape <span class="kw">with</span>
+  <span class="op">|</span> <span class="tp">Circle</span> r      <span class="op">=></span> pi <span class="op">*</span> r <span class="op">*</span> r
+  <span class="op">|</span> <span class="tp">Rectangle</span> w h <span class="op">=></span> w <span class="op">*</span> h</code></pre></div>
+
+      <h2 id="file-io">File IO</h2>
+      <p>Writing, reading, and processing file contents.</p>
+      <div class="terminal-wrap"><div class="terminal-bar"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="label">file_io.goat</span></div>
+<pre><code><span class="kw">fun</span> <span class="fn">main</span> _ <span class="op">=</span>
+  <span class="kw">io</span> {
+    <span class="kw">let</span> path <span class="op">=</span> <span class="str">"out.txt"</span>
+    <span class="kw">do!</span> <span class="fn">writeFile</span> path <span class="str">"Hello from Goat!\nLine 2\n"</span>
+    <span class="kw">let!</span> content <span class="op">=</span> readFile path
+    <span class="kw">do!</span> <span class="fn">println</span> (<span class="str">"Lines: "</span> <span class="op">++</span> <span class="fn">show</span> (<span class="fn">length</span> (<span class="fn">lines</span> content)))
+  }</code></pre></div>
+      <nav class="pager" aria-label="Pagination"><a class="pn pn-prev" href="../stdlib/utils/"><span class="pn-dir">&larr; Previous</span><span class="pn-title">Combinators & utilities</span></a><span></span></nav>
+    </div>
+  </div>
+</main>
+
+<footer>
+  <div class="footer-inner">
+    <span>&copy; 2026 <a href="https://github.com/GoatWhistle">GoatWhistle</a></span>
+    <span class="footer-center"><a href="https://github.com/GoatWhistle/goat-lang/blob/main/LICENSE">MIT License</a></span>
+    <span><a href="https://github.com/GoatWhistle/goat-lang">GitHub</a></span>
+  </div>
+</footer>
+
+</body>
+</html>

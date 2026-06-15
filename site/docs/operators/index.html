@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Operators · Goat</title>
+  <meta name="description" content="Goat operators and their precedence, from pipe to function application.">
+  <link rel="canonical" href="https://goatwhistle.github.io/goat-lang/docs/operators/">
+  <link rel="icon" href="../../assets/favicon.ico" sizes="32x32">
+  <link rel="icon" href="../../assets/favicon-32.png" type="image/png">
+  <link rel="apple-touch-icon" href="../../assets/apple-touch-icon.png">
+  <meta property="og:image" content="https://goatwhistle.github.io/goat-lang/assets/logo.jpg">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Operators · Goat">
+  <meta property="og:description" content="Goat operators and their precedence, from pipe to function application.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../style.css">
+</head>
+<body>
+
+<a class="skip-link" href="#main">Skip to content</a>
+
+<header class="topnav">
+  <nav class="topnav-inner" aria-label="Main navigation">
+    <a class="brand" href="../../">
+      <img class="brand-mark" src="../../assets/logo.jpg" width="34" height="34" alt="" aria-hidden="true">
+      Goat
+    </a>
+    <div class="topnav-links">
+      <a href="../" class="active" aria-current="page">Docs</a>
+      <a href="https://github.com/GoatWhistle/goat-lang" class="nav-ext" aria-label="GitHub repository"><svg role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg></a>
+    </div>
+  </nav>
+</header>
+
+<main id="main">
+  <div class="page-wrap with-sidebar">
+
+      <aside class="sidebar">
+      <nav aria-label="Documentation">
+      <span class="sidebar-section">Getting started</span>
+      <a href="../">Overview</a>
+      <a href="../installation/">Installation & CLI</a>
+      <span class="sidebar-section">Language</span>
+      <a href="../comments-literals/">Comments & literals</a>
+      <a href="../operators/" class="active" aria-current="page">Operators</a>
+      <a href="../bindings/">Bindings & functions</a>
+      <a href="../control-flow/">Control flow</a>
+      <a href="../data/">Lists, tuples & ADTs</a>
+      <a href="../patterns/">Pattern matching</a>
+      <a href="../lazy/">Lazy evaluation</a>
+      <a href="../io/">IO blocks</a>
+      <span class="sidebar-section">Standard library</span>
+      <a href="../stdlib/types/">Option & Result</a>
+      <a href="../stdlib/io/">IO functions</a>
+      <a href="../stdlib/strings/">Strings</a>
+      <a href="../stdlib/math/">Math</a>
+      <a href="../stdlib/lists/">Lists</a>
+      <a href="../stdlib/utils/">Combinators & utilities</a>
+      <span class="sidebar-section">Examples</span>
+      <a href="../examples/">Example programs</a>
+      </nav></aside>
+
+    <div class="content">
+      <h1>Operators</h1>
+      <p class="lead">Operators are listed from lowest to highest precedence.</p>
+
+      <table>
+        <thead><tr><th>Precedence</th><th>Operator</th><th>Associativity</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td>1</td><td><code>|&gt;</code></td><td>left</td><td>Pipe: <code>x |&gt; f</code> becomes <code>f x</code></td></tr>
+          <tr><td>1</td><td><code>~&gt;</code></td><td>left</td><td>Lazy pipe: the argument is wrapped in <code>lazy</code></td></tr>
+          <tr><td>2</td><td><code>&amp;&amp;</code></td><td>left</td><td>Logical AND</td></tr>
+          <tr><td>2</td><td><code>||</code></td><td>left</td><td>Logical OR</td></tr>
+          <tr><td>3</td><td><code>==</code> <code>!=</code> <code>/=</code></td><td>none</td><td>Equality / inequality (<code>!=</code> and <code>/=</code> are synonyms)</td></tr>
+          <tr><td>3</td><td><code>&lt;</code> <code>&gt;</code> <code>&lt;=</code> <code>&gt;=</code></td><td>none</td><td>Comparison</td></tr>
+          <tr><td>4</td><td><code>++</code></td><td>right</td><td>String and list concatenation</td></tr>
+          <tr><td>5</td><td><code>::</code></td><td>right</td><td>Cons: prepend an element to a list</td></tr>
+          <tr><td>6</td><td><code>+</code> <code>-</code></td><td>left</td><td>Addition / subtraction</td></tr>
+          <tr><td>7</td><td><code>*</code> <code>/</code> <code>mod</code></td><td>left</td><td>Multiplication / division / remainder</td></tr>
+          <tr><td>8</td><td><code>**</code></td><td>right</td><td>Exponentiation</td></tr>
+          <tr><td>9</td><td><code>not</code></td><td>prefix</td><td>Logical negation</td></tr>
+          <tr><td>10</td><td><code>-</code></td><td>prefix</td><td>Unary minus</td></tr>
+          <tr><td>11</td><td>application</td><td>left</td><td><code>f x y</code>, function application</td></tr>
+        </tbody>
+      </table>
+
+      <pre><code><span class="cmt">-- Operator examples</span>
+<span class="kw">let</span> a <span class="op">=</span> <span class="num">2</span> <span class="op">**</span> <span class="num">10</span>              <span class="cmt">-- 1024</span>
+<span class="kw">let</span> b <span class="op">=</span> <span class="num">10</span> <span class="kw">mod</span> <span class="num">3</span>            <span class="cmt">-- 1</span>
+<span class="kw">let</span> s <span class="op">=</span> <span class="str">"hello"</span> <span class="op">++</span> <span class="str">" world"</span> <span class="cmt">-- "hello world"</span>
+<span class="kw">let</span> xs <span class="op">=</span> <span class="num">1</span> <span class="op">::</span> <span class="num">2</span> <span class="op">::</span> <span class="num">3</span> <span class="op">::</span> []  <span class="cmt">-- [1, 2, 3]</span>
+<span class="kw">let</span> r <span class="op">=</span> xs <span class="op">|></span> <span class="fn">reverse</span> <span class="op">|></span> <span class="fn">show</span>  <span class="cmt">-- pipeline</span></code></pre>
+
+      <h2 id="pipe">Pipe operators</h2>
+      <p>Feed the value on the left into the function on the right:</p>
+      <pre><code><span class="cmt">-- |> is the ordinary pipe</span>
+<span class="kw">let</span> result <span class="op">=</span> [<span class="num">1</span>..<span class="num">10</span>]
+  <span class="op">|></span> <span class="fn">filter</span> (\x <span class="op">-></span> x <span class="kw">mod</span> <span class="num">2</span> <span class="op">==</span> <span class="num">0</span>)
+  <span class="op">|></span> <span class="fn">map</span> (\x <span class="op">-></span> x <span class="op">*</span> x)
+  <span class="op">|></span> <span class="fn">fold</span> (\acc x <span class="op">-></span> acc <span class="op">+</span> x) <span class="num">0</span>
+  <span class="op">|></span> <span class="fn">show</span></code></pre>
+      <nav class="pager" aria-label="Pagination"><a class="pn pn-prev" href="../comments-literals/"><span class="pn-dir">&larr; Previous</span><span class="pn-title">Comments & literals</span></a><a class="pn pn-next" href="../bindings/"><span class="pn-dir">Next &rarr;</span><span class="pn-title">Bindings & functions</span></a></nav>
+    </div>
+  </div>
+</main>
+
+<footer>
+  <div class="footer-inner">
+    <span>&copy; 2026 <a href="https://github.com/GoatWhistle">GoatWhistle</a></span>
+    <span class="footer-center"><a href="https://github.com/GoatWhistle/goat-lang/blob/main/LICENSE">MIT License</a></span>
+    <span><a href="https://github.com/GoatWhistle/goat-lang">GitHub</a></span>
+  </div>
+</footer>
+
+</body>
+</html>

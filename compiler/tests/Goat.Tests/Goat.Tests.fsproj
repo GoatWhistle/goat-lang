@@ -1,0 +1,30 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <IsPackable>false</IsPackable>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="xunit" Version="2.7.0" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.5.7">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.9.0" />
+    <PackageReference Include="FsUnit.xUnit" Version="6.0.1" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Goat.Core\Goat.Core.fsproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="TestHelpers.fs" />
+    <Compile Include="ParserTests.fs" />
+    <Compile Include="EvalTests.fs" />
+    <Compile Include="PatternTests.fs" />
+    <Compile Include="LazyTests.fs" />
+    <Compile Include="IOTests.fs" />
+    <Compile Include="StdlibTests.fs" />
+    <Compile Include="IntegrationTests.fs" />
+    <Compile Include="ReleaseFixesTests.fs" />
+  </ItemGroup>
+</Project>

@@ -1,0 +1,10 @@
+Original:
+[64, 34, 25, 12, 22, 11, 90]
+Quicksort ascending:
+[11, 12, 22, 25, 34, 64, 90]
+Quicksort descending:
+[90, 64, 34, 25, 22, 12, 11]
+Mergesort:
+[11, 12, 22, 25, 34, 64, 90]
+Sorted strings:
+["apple", "banana", "cherry", "date", "elderberry"]

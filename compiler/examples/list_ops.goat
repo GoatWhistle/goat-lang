@@ -1,0 +1,23 @@
+fun rec quicksort xs =
+  match xs with
+  | []      => []
+  | p :: rest =>
+      let smaller = filter (\x -> x < p) rest in
+      let greater = filter (\x -> x >= p) rest in
+      append (quicksort smaller) (p :: quicksort greater)
+
+fun sumList xs = fold (\acc x -> acc + x) 0 xs
+
+fun productList xs = fold (\acc x -> acc * x) 1 xs
+
+fun main _ =
+  io {
+    let nums = [5, 3, 8, 1, 9, 2, 7, 4, 6]
+    do! println (show nums)
+    do! println (show (quicksort nums))
+    do! println (show (sumList [1..10]))
+    do! println (show (productList [1..5]))
+    do! println (show (map (\x -> x * x) [1..5]))
+    do! println (show (filter (\x -> x mod 2 == 0) [1..10]))
+    do! println (show (zip [1..5] ["a", "b", "c", "d", "e"]))
+  }

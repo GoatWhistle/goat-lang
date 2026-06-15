@@ -1,0 +1,35 @@
+type Shape =
+  | Circle    of radius
+  | Rectangle of width height
+  | Triangle  of a b c
+
+fun area shape =
+  match shape with
+  | Circle r         => pi * r * r
+  | Rectangle w h    => w * h
+  | Triangle a b c   =>
+      let s = (a + b + c) / 2.0 in
+      sqrt (s * (s - a) * (s - b) * (s - c))
+
+fun perimeter shape =
+  match shape with
+  | Circle r         => 2.0 * pi * r
+  | Rectangle w h    => 2.0 * (w + h)
+  | Triangle a b c   => a + b + c
+
+fun showShape shape =
+  match shape with
+  | Circle r      => "Circle(r=" ++ show r ++ ")"
+  | Rectangle w h => "Rect(" ++ show w ++ "x" ++ show h ++ ")"
+  | Triangle a b c => "Triangle(" ++ show a ++ "," ++ show b ++ "," ++ show c ++ ")"
+
+fun describeShape s =
+  showShape s ++ " area=" ++ show (round (area s)) ++ " perim=" ++ show (round (perimeter s))
+
+fun main _ =
+  io {
+    let shapes = [Circle 5.0, Rectangle 4.0 6.0, Triangle 3.0 4.0 5.0]
+    do! println (unlines (map describeShape shapes))
+    let largest = fold (\acc s -> if area s > area acc then s else acc) (head shapes) (tail shapes)
+    do! println ("Largest: " ++ showShape largest)
+  }
